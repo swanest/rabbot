@@ -196,7 +196,7 @@ function getResolutionOperations( channel, raw, messages, options ) {
 	return getTrackedOps( raw, messages );
 }
 
-function getTrackedOps( raw, messages ) {
+function getTrackedOps( raw, messages ) { //@cyril: batch operations
 	return messages.getMessageOps( raw.fields.deliveryTag );
 }
 
