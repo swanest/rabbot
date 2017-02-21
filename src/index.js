@@ -9,6 +9,7 @@ var dispatch = postal.channel( "rabbit.dispatch" );
 var responses = postal.channel( "rabbit.responses" );
 var signal = postal.channel( "rabbit.ack" );
 var format = require( "util" ).format;
+var log = require( "./log.js" )( "rabbot.index" );
 
 var unhandledStrategies = {
 	nackOnUnhandled: function( message ) {
@@ -153,8 +154,8 @@ Broker.prototype.batchAck = function() {
 	signal.publish( "ack", {} );
 };
 
-Broker.prototype.batchNack = function() {
-	signal.publish( "nack", {} );
+Broker.prototype.batchNack = function() { // same behaviour as batchAck, just process the ack() and nack() !
+	signal.publish( "ack", {} );
 };
 
 Broker.prototype.bindExchange = function( source, target, keys, connectionName ) {
@@ -285,7 +286,7 @@ Broker.prototype.handle = function( messageType, handler, queueName, context, co
 	var subscription = dispatch.subscribe( target, options.handler.bind( options.context ) );
 	if ( options.autoNack ) {
 		subscription.catch( function( err, msg ) {
-			console.log( "Handler for '" + target + "' failed with:", err.stack );
+			log.err( "Handler for '" + target + "' failed with:", err.stack );
 			msg.nack();
 		} );
 	}
