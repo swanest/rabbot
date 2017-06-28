@@ -234,10 +234,8 @@ var Connection = function( options, connectionFn, channelFn ) {
 					this.deferUntilTransition( "connected" );
 				},
 				failed: function() {
-					setTimeout(function(){ //@cyril tweak
-						this.deferUntilTransition( "failed" );
-						this.transition( "failed" );
-					}.bind( this ), options.retryAfter * 1000);
+					this.deferUntilTransition( "failed" );
+					this.transition( "failed" );
 				}
 			},
 			connected: {
